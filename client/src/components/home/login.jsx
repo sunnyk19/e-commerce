@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser, clearError } from "../../features/authSlice";
+import { loginUser, clearError, sendOTP, verifyOTP } from "../../features/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,10 @@ const Login = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loginMethod, setLoginMethod] = useState("email");
+  const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
 
   const { email, password } = formData;
 
@@ -30,6 +35,28 @@ const Login = () => {
     if (!result.error) {
       navigate("/");
     }
+  };
+
+  const handleSendOTP = async () => {
+    if (mobile.length === 10) {
+      await dispatch(sendOTP(mobile));
+      setOtpSent(true);
+    }
+  };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    const result = await dispatch(verifyOTP({ mobile, otp }));
+    if (!result.error) {
+      navigate("/");
+    }
+  };
+
+  const toggleLoginMethod = () => {
+    setLoginMethod(loginMethod === "email" ? "otp" : "email");
+    setOtpSent(false);
+    setOtp("");
+    dispatch(clearError());
   };
 
   return (
@@ -102,12 +129,80 @@ const Login = () => {
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-
           <div className="mt-4 text-center">
             <Link to="/forgot-password" className="text-primary text-decoration-none fw-medium small">
               Forgot Password?
             </Link>
           </div>
+
+          <div className="mt-3 text-center">
+            <button
+              type="button"
+              onClick={toggleLoginMethod}
+              className="btn btn-link text-decoration-none"
+            >
+              {loginMethod === "email" ? "Use Mobile OTP" : "Use Email/Password"}
+            </button>
+          </div>
+
+          {loginMethod === "otp" && (
+            <div className="mt-3 pt-3 border-top">
+              <h6 className="mb-3">Login with Mobile OTP</h6>
+              <form onSubmit={handleVerifyOTP}>
+                {!otpSent ? (
+                  <>
+                    <div className="mb-3">
+                      <input
+                        type="tel"
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        maxLength={10}
+                        required
+                        className="form-control py-2"
+                        placeholder="Enter Mobile Number"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleSendOTP}
+                      disabled={loading || mobile.length !== 10}
+                      className="btn btn-primary-custom w-100 py-2"
+                    >
+                      {loading ? "Sending OTP..." : "Send OTP"}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        maxLength={6}
+                        required
+                        className="form-control py-2"
+                        placeholder="Enter OTP"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={loading || otp.length !== 6}
+                      className="btn btn-primary-custom w-100 py-2"
+                    >
+                      {loading ? "Verifying..." : "Verify & Login"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOtpSent(false)}
+                      className="btn btn-link w-100 mt-2"
+                    >
+                      Change Mobile Number
+                    </button>
+                  </>
+                )}
+              </form>
+            </div>
+          )}
 
           <div className="mt-4 text-center">
             <p className="text-muted small mb-3">Have an account?</p>
@@ -120,6 +215,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+
 
       {/* Footer */}
       <footer className="bg-light text-center py-3">

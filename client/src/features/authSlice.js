@@ -27,6 +27,31 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const sendOTP = createAsyncThunk(
+  "auth/sendOTP",
+  async (mobile, { rejectWithValue }) => {
+    try {
+      const res = await API.post("/auth/send-otp", { mobile });
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: "Failed to send OTP" });
+    }
+  }
+);
+
+export const verifyOTP = createAsyncThunk(
+  "auth/verifyOTP",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await API.post("/auth/verify-otp", data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: "Invalid OTP" });
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -73,6 +98,33 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Registration failed";
+      })
+      // Send OTP
+      .addCase(sendOTP.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(sendOTP.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(sendOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to send OTP";
+      })
+      // Verify OTP
+      .addCase(verifyOTP.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyOTP.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(verifyOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Invalid OTP";
       });
   },
 });

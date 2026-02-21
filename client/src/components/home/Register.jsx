@@ -43,7 +43,7 @@ const Register = () => {
 
     const result = await dispatch(registerUser({ name, email, password }));
     if (!result.error) {
-      navigate("/");
+      navigate("/login");
     }
   };
 
