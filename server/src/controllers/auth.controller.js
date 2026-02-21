@@ -10,6 +10,14 @@ const generateToken = (user) => {
   );
 };
 
+// Generate 6-digit OTP
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Store OTP temporarily (in production, use Redis or database)
+const otpStore = new Map();
+
 // REGISTER
 export const registerUser = async (req, res) => {
   try {
@@ -82,6 +90,83 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// SEND OTP
+export const sendOTP = async (req, res) => {
+  try {
+    const { mobile } = req.body;
+
+    if (!mobile) {
+      return res.status(400).json({ message: "Mobile number is required" });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+    
+    // Store OTP with 5-minute expiry
+    otpStore.set(mobile, { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
+    
+    console.log(`OTP for ${mobile}: ${otp}`); // In production, send via SMS API
+    
+    res.status(200).json({ 
+      message: "OTP sent successfully",
+      // Remove this in production - for testing only
+      otp: otp 
+    });
+  } catch (error) {
+    console.error("Send OTP error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// VERIFY OTP AND LOGIN
+export const verifyOTP = async (req, res) => {
+  try {
+    const { mobile, otp } = req.body;
+
+    if (!mobile || !otp) {
+      return res.status(400).json({ message: "Mobile and OTP are required" });
+    }
+
+    // Check OTP
+    const storedOTP = otpStore.get(mobile);
+    
+    if (!storedOTP) {
+      return res.status(400).json({ message: "OTP expired or not requested" });
+    }
+
+    if (Date.now() > storedOTP.expiresAt) {
+      otpStore.delete(mobile);
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    if (storedOTP.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    // OTP verified - find user and login
+    const user = await User.findOne({ mobile });
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found with this mobile" });
+    }
+
+    // Clear OTP after successful verification
+    otpStore.delete(mobile);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role,
+      token: generateToken(user),
+    });
+  } catch (error) {
+    console.error("Verify OTP error:", error);
     res.status(500).json({ message: error.message });
   }
 };
