@@ -1,0 +1,93 @@
+/* Bootstrap CSS */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Custom Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Flipkart-like custom styles */
+.navbar-custom {
+  background-color: #2874f0;
+}
+
+.search-box {
+  background: white;
+  border-radius: 2px;
+}
+
+.btn-primary-custom {
+  background-color: #fb641b;
+  border-color: #fb641b;
+  color: white;
+}
+
+.btn-primary-custom:hover {
+  background-color: #e5510a;
+  border-color: #e5510a;
+}
+
+.footer-custom {
+  background-color: #172337;
+}
+
+.category-item {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-card {
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.discount-badge {
+  background-color: #ff9f00;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.rating-badge {
+  background-color: #388e3c;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.user-dropdown {
+  position: relative;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
+  min-width: 200px;
+  background: white;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.logo-text {
+  color: #ffe500;
+  font-weight: bold;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.logo-subtext {
+  color: white;
+  font-size: 12px;
+}

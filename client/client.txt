@@ -1,0 +1,32 @@
+src/
+│
+├── app/
+│   └── store.js
+│
+├── features/
+│   ├── auth/
+│   │   ├── authSlice.js
+│   │   └── authAPI.js
+│   ├── products/
+│   │   ├── productSlice.js
+│   │   └── productAPI.js
+│   └── cart/
+│       └── cartSlice.js
+│
+├── pages/
+│   ├── Home.jsx
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   ├── ProductDetails.jsx
+│   ├── Cart.jsx
+│   └── AdminDashboard.jsx
+│
+├── components/
+│   ├── Navbar.jsx
+│   ├── ProductCard.jsx
+│   └── ProtectedRoute.jsx
+│
+├── services/
+│   └── axios.js
+│
+└── App.jsx
