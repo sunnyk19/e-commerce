@@ -1,0 +1,22 @@
+Phase-Wise Development Plan (Follow This)
+✅ Phase 1 – Backend Core
+Auth
+Product CRUD
+Order creation
+
+✅ Phase 2 – Frontend
+
+Product listing
+Cart logic
+Checkout UI
+
+✅ Phase 3 – Admin Panel
+Protected routes
+Dashboard stats
+
+✅ Phase 4 – Payment Integration
+Stripe / Razorpay test mode
+
+✅ Phase 5 – Deployment
+Dockerize
+Deploy on AWS
