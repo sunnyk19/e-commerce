@@ -62,8 +62,8 @@ const Register = () => {
       </header>
 
       {/* Register Form */}
-      <div className="flex-grow-1 d-flex align-items-center justify-content-center py-5">
-        <div className="bg-white rounded shadow-sm p-4 w-100" style={{ maxWidth: "400px" }}>
+      <div className="login-backdrop flex-grow-1 d-flex align-items-center justify-content-center py-5">
+        <div className="login-panel rounded shadow-sm p-4 w-100" style={{ maxWidth: "400px" }}>
           <h5 className="fw-medium mb-4">Sign Up</h5>
 
           <form onSubmit={handleSubmit}>

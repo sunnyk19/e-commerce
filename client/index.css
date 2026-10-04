@@ -11,6 +11,17 @@ body {
   background-color: #2874f0;
 }
 
+.login-backdrop {
+  background:
+    linear-gradient(rgba(13, 26, 36, 0.42), rgba(13, 26, 36, 0.42)),
+    url("https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1920&q=85") center / cover no-repeat;
+}
+
+.login-panel {
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+}
+
 .search-box {
   background: white;
   border-radius: 2px;
